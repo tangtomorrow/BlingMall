@@ -5,6 +5,7 @@ import io.tangtomorrow.blingmall.baselibrary.common.BaseApplication
 import io.tangtomorrow.blingmall.baselibrary.injection.component.ActivityComponent
 import io.tangtomorrow.blingmall.baselibrary.injection.component.DaggerActivityComponent
 import io.tangtomorrow.blingmall.baselibrary.injection.module.ActivityModule
+import io.tangtomorrow.blingmall.baselibrary.injection.module.LifecycleProviderModule
 import io.tangtomorrow.blingmall.baselibrary.presenter.BasePresenter
 import io.tangtomorrow.blingmall.baselibrary.presenter.view.BaseView
 import javax.inject.Inject
@@ -31,9 +32,16 @@ abstract class BaseMvpActivity<T : BasePresenter<*>> : BaseActivity(), BaseView 
         super.onCreate(savedInstanceState)
 
         initActivityInjection()
+        injectComponent()
     }
 
     private fun initActivityInjection() {
-        activityComponent = DaggerActivityComponent.builder().appComponent((application as BaseApplication).appComponent).activityModule(ActivityModule(this)).build()
+        activityComponent = DaggerActivityComponent.builder()
+                .appComponent((application as BaseApplication).appComponent)
+                .activityModule(ActivityModule(this))
+                .lifecycleProviderModule(LifecycleProviderModule(this))
+                .build()
     }
+
+    abstract fun injectComponent()
 }

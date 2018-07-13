@@ -5,9 +5,6 @@ import io.tangtomorrow.blingmall.baselibrary.presenter.BasePresenter
 import io.tangtomorrow.blingmall.baselibrary.rx.BaseSubscriber
 import io.tangtomorrow.blingmall.usercenter.presenter.view.RegisterView
 import io.tangtomorrow.blingmall.usercenter.service.UserService
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 class RegisterPresenter @Inject constructor() : BasePresenter<RegisterView>() {
@@ -22,11 +19,14 @@ class RegisterPresenter @Inject constructor() : BasePresenter<RegisterView>() {
         userService.register(mobile, verifyCode, pwd)
                 .execute(object : BaseSubscriber<Boolean>() {
                     override fun onNext(t: Boolean) {
-                        mView.onRegisterResult(true)
+                        if (t) {
+                            mView.onRegisterResult("注册成功")
+                        }
                     }
-                })
+                }, lifecycleProvider)
     }
 
+    /*
     fun login(mobile: String, pwd: String) {
         /*
             业务逻辑
@@ -48,4 +48,5 @@ class RegisterPresenter @Inject constructor() : BasePresenter<RegisterView>() {
                     }
                 })
     }
+    */
 }
